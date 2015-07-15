@@ -21,7 +21,7 @@ public class IRSensorEventListener implements SensorEventListener {
     private double MAX_BOTTOM = 3200.;
     private double BOTTOM_RANGE = MAX_BOTTOM - MIN_BOTTOM;
 
-    private double MIN_PITCH = 55.;
+    private double MIN_PITCH = 110.;
     private double MAX_PITCH = 880.;
     private double PITCH_RANGE = MAX_PITCH - MIN_PITCH;
 
