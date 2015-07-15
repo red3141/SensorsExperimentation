@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 
@@ -24,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
     private Button mStartStopButton;
     private boolean mIsRunning;
-    private TextView mSensorDataView;
 
     private Sensor mIRSensor;
 
@@ -49,10 +49,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        mSensorDataView = (TextView) findViewById(R.id.sensor_value);
+        RadioGroup waveFormSelector = (RadioGroup) findViewById(R.id.wave_form_selector);
+        waveFormSelector.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.sine_button:
+                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.SINE);
+                        break;
+                    case R.id.sawtooth_button:
+                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.SAWTOOTH);
+                        break;
+                    case R.id.square_button:
+                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.SQUARE);
+                        break;
+                    case R.id.triangle_button:
+                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.TRIANGLE);
+                        break;
+                }
+            }
+        });
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mIRSensorEventListener = new IRSensorEventListener(this, mSensorDataView);
+        mIRSensorEventListener = new IRSensorEventListener(this);
 
         Log.d(TAG, mSensorManager.getSensorList(Sensor.TYPE_ALL).toString());
 

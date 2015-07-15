@@ -12,7 +12,6 @@ public class IRSensorEventListener implements SensorEventListener {
     private static final String TAG = "IRSensorEventListener";
 
     private Context mContext;
-    private TextView mDataView;
     private TonePlayer mTonePlayer;
 
     private double MIN_TOP = 400.;
@@ -26,10 +25,13 @@ public class IRSensorEventListener implements SensorEventListener {
     private double MAX_PITCH = 880.;
     private double PITCH_RANGE = MAX_PITCH - MIN_PITCH;
 
-    public IRSensorEventListener(Context c, TextView v) {
+    public IRSensorEventListener(Context c) {
         mContext = c;
-        mDataView = v;
         mTonePlayer = new TonePlayer();
+    }
+
+    public void changeWaveForm(TonePlayer.WAVE_FORM newWaveForm) {
+        mTonePlayer.changeWaveForm(newWaveForm);
     }
 
     @Override

@@ -4,4 +4,10 @@
     <string name="action_settings">Settings</string>
     <string name="start">Start</string>
     <string name="stop">Stop</string>
+
+    <string name="select_wave_form">Select a wave form:</string>
+    <string name="sine">Sine</string>
+    <string name="sawtooth">Sawtooth</string>
+    <string name="square">Square</string>
+    <string name="triangle">Triangle</string>
 </resources>
