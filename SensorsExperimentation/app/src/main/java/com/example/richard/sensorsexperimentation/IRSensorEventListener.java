@@ -49,7 +49,7 @@ public class IRSensorEventListener implements SensorEventListener {
         // mDataView.setText("" + (int)event.values[3]);
         double pitch = event.values[0];
         double volume = event.values[3];
-        double pitchFraction = Math.sqrt(Math.sqrt(Math.max(0, Math.min(1, (pitch - MIN_TOP) / TOP_RANGE))));
+        double pitchFraction = 1 - Math.sqrt(Math.sqrt(Math.max(0, Math.min(1, (pitch - MIN_TOP) / TOP_RANGE))));
         double volumeFraction = Math.max(0, Math.min(1, (volume - MIN_BOTTOM) / BOTTOM_RANGE));
         double hertz = MIN_PITCH + pitchFraction * PITCH_RANGE;
 
