@@ -4,15 +4,18 @@ import android.content.Context;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.widget.TextView;
 
-public class IRSensorEventListener implements SensorEventListener {
-    private static final String TAG = "IRSensorEventListener";
+public class Theremin implements SensorEventListener {
+    private static final String TAG = "Theremin";
 
     private Context mContext;
     private TonePlayer mTonePlayer;
+    private SensorManager mSensorManager;
+    private Sensor mIRSensor;
 
     private double MIN_TOP = 400.;
     private double MAX_TOP = 4060.;
@@ -25,9 +28,11 @@ public class IRSensorEventListener implements SensorEventListener {
     private double MAX_PITCH = 880.;
     private double PITCH_RANGE = MAX_PITCH - MIN_PITCH;
 
-    public IRSensorEventListener(Context c) {
+    public Theremin(Context c, SensorManager sensorManager, Sensor irSensor) {
         mContext = c;
         mTonePlayer = new TonePlayer();
+        mSensorManager = sensorManager;
+        mIRSensor = irSensor;
     }
 
     public void changeWaveForm(TonePlayer.WAVE_FORM newWaveForm) {
@@ -59,5 +64,13 @@ public class IRSensorEventListener implements SensorEventListener {
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public void register() {
+        mSensorManager.registerListener(this, mIRSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    public void unregister() {
+        mSensorManager.unregisterListener(this);
     }
 }

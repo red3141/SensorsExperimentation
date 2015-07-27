@@ -10,4 +10,6 @@
     <string name="sawtooth">Sawtooth</string>
     <string name="square">Square</string>
     <string name="triangle">Triangle</string>
+
+    <string name="no_ir_sensor">Your phone appears to not have a Motorola IR sensor; this app will not work.</string>
 </resources>

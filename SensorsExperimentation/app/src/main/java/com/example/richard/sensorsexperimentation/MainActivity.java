@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Sensor mIRSensor;
 
-    private IRSensorEventListener mIRSensorEventListener;
+    private Theremin mTheremin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +43,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mIsRunning) {
-                    unregisterSensorListeners();
+                    unregisterTheremin();
                 } else {
-                    registerSensorListeners();
+                    registerTheremin();
                 }
             }
         });
@@ -55,32 +56,39 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.sine_button:
-                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.SINE);
+                        mTheremin.changeWaveForm(TonePlayer.WAVE_FORM.SINE);
                         break;
                     case R.id.sawtooth_button:
-                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.SAWTOOTH);
+                        mTheremin.changeWaveForm(TonePlayer.WAVE_FORM.SAWTOOTH);
                         break;
                     case R.id.square_button:
-                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.SQUARE);
+                        mTheremin.changeWaveForm(TonePlayer.WAVE_FORM.SQUARE);
                         break;
                     case R.id.triangle_button:
-                        mIRSensorEventListener.changeWaveForm(TonePlayer.WAVE_FORM.TRIANGLE);
+                        mTheremin.changeWaveForm(TonePlayer.WAVE_FORM.TRIANGLE);
                         break;
                 }
             }
         });
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-        mIRSensorEventListener = new IRSensorEventListener(this);
 
-        Log.d(TAG, mSensorManager.getSensorList(Sensor.TYPE_ALL).toString());
+        //Log.d(TAG, mSensorManager.getSensorList(Sensor.TYPE_ALL).toString());
 
         for (Sensor sensor : mSensorManager.getSensorList(Sensor.TYPE_ALL)) {
             if (sensor.getName().equals("IR Raw Data")) {
-                Log.d(TAG, sensor.toString());
+                //Log.d(TAG, sensor.toString());
                 mIRSensor = sensor;
             }
         }
+
+        if (mIRSensor == null) {
+            Toast toast = Toast.makeText(this, R.string.no_ir_sensor, Toast.LENGTH_LONG);
+            toast.show();
+            finish();
+        }
+
+        mTheremin = new Theremin(this, mSensorManager, mIRSensor);
     }
 
     @Override
@@ -112,19 +120,19 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        unregisterSensorListeners();
+        unregisterTheremin();
         super.onPause();
     }
 
-    private void registerSensorListeners() {
+    private void registerTheremin() {
         mIsRunning = true;
         mStartStopButton.setText(R.string.stop);
-        mSensorManager.registerListener(mIRSensorEventListener, mIRSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        mTheremin.register();
     }
 
-    private void unregisterSensorListeners() {
+    private void unregisterTheremin() {
         mIsRunning = false;
         mStartStopButton.setText(R.string.start);
-        mSensorManager.unregisterListener(mIRSensorEventListener);
+        mTheremin.unregister();
     }
 }
